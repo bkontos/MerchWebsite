@@ -16,7 +16,7 @@ function MerchTable() {
         }
       );
       const data = await response.json();
-      setData(data); // set loaded to the second row of the response data array
+      setData(data); // set loaded to the second row of the response data array this is a test
     }
     fetchData();
   }, []);
