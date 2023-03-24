@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ResultsTable from "./ResultsTable";
 
 function MerchTable() {
   const [data, setData] = useState([]);
