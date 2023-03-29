@@ -1,80 +1,125 @@
-import React, { useState, useEffect } from "react";
-import ResultsTable from "./ResultsTable";
+import React, { useState, useEffect } from 'react';
+import { getAllMerchandise, createMerchandise, updateMerchandise, deleteMerchandise, deleteAllMerchandise } from './Database';
 
 function MerchTable() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([{ id: null, item: '', size: '', price: 0, countIn: 0, countOut: 0, comps: 0, isHard: false }]);
+  const [ccData, setCcData] = useState({ sales: 0, percentage: 0, fee: 0 });
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(
-        "https://sheetdb.io/api/v1/nc7krlodazbab",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2",
-          },
-        }
-      );
-      const data = await response.json();
-      setData(data); // set loaded to the second row of the response data array this is a test
+    getAllMerchandise()
+      .then(rows => {
+        setData(rows);
+      })
+      .catch(err => {
+        console.error(err);
+      });
+
+    const savedCcData = localStorage.getItem('ccData');
+    if (savedCcData) {
+      setCcData(JSON.parse(savedCcData));
     }
-    fetchData();
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('ccData', JSON.stringify(ccData));
+  }, [ccData]);
+
+  const handleInputChange = (event, rowIndex, field) => {
+    const { value, type, checked } = event.target;
+    const newData = [...data];
+    const row = newData[rowIndex];
+    row[field] = type === 'checkbox' ? checked : value;
+    setData(newData);
+  };
+
   
-
-  const handleInputChange = (event, rowIndex, columnName) => {
-    const updatedData = [...data];
-    if (columnName === "isHard") {
-      updatedData[rowIndex][columnName] = event.target.checked ? "true" : "false";
-    } else {
-      updatedData[rowIndex][columnName] = event.target.value;
-    }
-    setData(updatedData);
-  };
-
   const handleDeleteRow = (rowIndex) => {
-    const updatedData = [...data];
-    updatedData.splice(rowIndex, 1);
-    setData(updatedData);
+    const row = data[rowIndex];
+    console.log("Deleting row with id:", row.id);
+    deleteMerchandise(row.id)
+    deleteMerchandise(row.id)
+      .then(() => {
+        const newData = [...data];
+        newData.splice(rowIndex, 1);
+        setData(newData);
+      })
+      .then(() => {
+        getAllMerchandise()
+          .then(rows => {
+            setData(rows);
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      })
+      .catch(err => {
+        console.error(err);
+      });
   };
+
+  const handleSaveRow = (rowIndex) => {
+    const row = data[rowIndex];
+    if (row.id) {
+      updateMerchandise(row.id, row)
+        .then(() => {
+          console.log(`Row with item ${row.item} updated`);
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    } else {
+      createMerchandise(row)
+        .then((id) => {
+          row.id = id;
+          console.log(`A row has been inserted with rowid ${id}`);
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  }
 
   const handleAddRow = () => {
-    setData([...data, { item: "", size: "", price: "", count_in: "", count_out: "", comps: "", isHard: "" }]);
+    const newData = [...data];
+    newData.push({ id: null, item: '', size: '', price: 0, countIn: 0, countOut: 0, comps: 0, isHard: false });
+    setData(newData);
   };
 
-  const handleSaveRow = async (rowIndex) => {
-    const url = `https://sheetdb.io/api/v1/nc7krlodazbab/price/${data[rowIndex].price}`;
-    const options = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2",
-      },
-      body: JSON.stringify(data[rowIndex]),
-    };
-    const response = await fetch(url, options);
-    const responseData = await response.json();
-    setData([...data.slice(0, rowIndex), responseData[0], ...data.slice(rowIndex + 1)]);
+  const handleSaveTable = async () => {
+    try {
+      const promises = data.map((row) => {
+        if (row.id) {
+          return updateMerchandise(row.id, row);
+        } else {
+          return createMerchandise(row);
+        }
+      });
+      await Promise.all(promises);
+      console.log('All rows saved');
+    } catch (error) {
+      console.error('Error saving rows', error);
+    }
   };
-  //I think the best way to go about the POST/PATCH situation is to post a request, 
-  //get the id's for that post request and then if the user does another submit, but the
-  //id's match a previous post request then you do a PATCH instead
+    
 
-  const handleSubmit = async () => {
-    const url = "https://sheetdb.io/api/v1/nc7krlodazbab";
-    const options = {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2",
-      },
-      body: JSON.stringify(data),
-    };
+  const handleExportData = () => {
+    //export data to a CSV File
+  };
 
-    const response = await fetch(url, options);
-    const responseData = await response.json();
-    setData(responseData);
+  const handleDeleteAll = async () => {
+    try {
+      const response = await deleteAllMerchandise();
+      console.log(response.message);
+      setData([]);
+    } catch (error) {
+      console.error('Error deleting merchandise table', error);
+    }
+  };
+  
+
+  const handleCcInputChange = (event, field) => {
+    const { value } = event.target;
+    setCcData({ ...ccData, [field]: value });
   };
 
   return (
@@ -105,10 +150,10 @@ function MerchTable() {
                 <input type="number" value={row.price} onChange={(event) => handleInputChange(event, rowIndex, "price")} />
               </td>
               <td>
-                <input type="number" value={row.count_in} onChange={(event) => handleInputChange(event, rowIndex, "count_in")} />
+                <input type="number" value={row.countIn} onChange={(event) => handleInputChange(event, rowIndex, "countIn")} />
               </td>
               <td>
-                <input type="number" value={row.count_out} onChange={(event) => handleInputChange(event, rowIndex, "count_out")} />
+                <input type="number" value={row.countOut} onChange={(event) => handleInputChange(event, rowIndex, "countOut")} />
               </td>
               <td>
                 <input type="number" value={row.comps} onChange={(event) => handleInputChange(event, rowIndex, "comps")} />
@@ -122,10 +167,20 @@ function MerchTable() {
               </td>
             </tr>
           ))}
+            <tr>
+              <td>Credit Card Sales:</td>
+              <td><input type="number" value={ccData.sales} onChange={(event) => handleCcInputChange(event, "sales")} /></td>
+              <td>Credit Card Percentage:</td>
+              <td><input type="number" value={ccData.percentage} onChange={(event) => handleCcInputChange(event, "percentage")} /></td>
+              <td>Credit Card Fee:</td>
+              <td><input type="number" value={ccData.fee} onChange={(event) => handleCcInputChange(event, "fee")} /></td>
+            </tr>
         </tbody>
     </table>
     <button onClick={handleAddRow}>Add Row</button>
-    <button onClick={handleSubmit}>Submit</button>
+    <button onClick={handleSaveTable}>Save All</button>
+    <button onClick={handleExportData}>Export</button>
+    <button onClick={handleDeleteAll}>Delete All</button>
     </div>
     );
 }
