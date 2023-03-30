@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getAllMerchandise, createMerchandise, updateMerchandise, deleteMerchandise, deleteAllMerchandise } from './Database';
 
 function MerchTable() {
-  const [data, setData] = useState([{ id: null, item: '', size: '', price: 0, countIn: 0, countOut: 0, comps: 0, isHard: false }]);
+  const [data, setData] = useState([{ id: 0, item: '', size: '', price: 0, countIn: 0, countOut: 0, comps: 0, isHard: false }]);
   const [ccData, setCcData] = useState({ sales: 0, percentage: 0, fee: 0 });
 
   useEffect(() => {
@@ -35,26 +35,21 @@ function MerchTable() {
   
   const handleDeleteRow = (rowIndex) => {
     const row = data[rowIndex];
-    console.log("Deleting row with id:", row.id);
-    deleteMerchandise(row.id)
-    deleteMerchandise(row.id)
-      .then(() => {
-        const newData = [...data];
-        newData.splice(rowIndex, 1);
-        setData(newData);
-      })
-      .then(() => {
-        getAllMerchandise()
-          .then(rows => {
-            setData(rows);
-          })
-          .catch(err => {
-            console.error(err);
-          });
-      })
-      .catch(err => {
-        console.error(err);
-      });
+    if (row.id) {
+      deleteMerchandise(row.id)
+        .then(() => {
+          const newData = [...data];
+          newData.splice(rowIndex, 1);
+          setData(newData);
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    } else {
+      const newData = [...data];
+      newData.splice(rowIndex, 1);
+      setData(newData);
+    }
   };
 
   const handleSaveRow = (rowIndex) => {
@@ -62,44 +57,63 @@ function MerchTable() {
     if (row.id) {
       updateMerchandise(row.id, row)
         .then(() => {
-          console.log(`Row with item ${row.item} updated`);
+          console.log(`Row with id ${row.id} updated`);
         })
         .catch(err => {
           console.error(err);
         });
     } else {
       createMerchandise(row)
-        .then((id) => {
-          row.id = id;
-          console.log(`A row has been inserted with rowid ${id}`);
+        .then((newRow) => {
+          const newData = [...data];
+          newData[rowIndex] = { ...row, id: newRow.id }; // Update the id property
+          setData(newData);
+          console.log(`A row has been inserted with rowid ${row.id}`);
         })
         .catch(err => {
           console.error(err);
         });
     }
-  }
+  };
 
-  const handleAddRow = () => {
+  const handleAddRow = () => {  
     const newData = [...data];
-    newData.push({ id: null, item: '', size: '', price: 0, countIn: 0, countOut: 0, comps: 0, isHard: false });
+    const newRow = { id: null, item: '', size: '', price: 0, countIn: 0, countOut: 0, comps: 0, isHard: false };
+    newData.push(newRow);
     setData(newData);
   };
+  
 
-  const handleSaveTable = async () => {
-    try {
-      const promises = data.map((row) => {
-        if (row.id) {
-          return updateMerchandise(row.id, row);
-        } else {
-          return createMerchandise(row);
-        }
-      });
-      await Promise.all(promises);
-      console.log('All rows saved');
-    } catch (error) {
-      console.error('Error saving rows', error);
-    }
+  const handleSaveTable = () => {
+    data.forEach((row, index) => {
+      if (row.id) {
+        updateMerchandise(row.id, row)
+          .then(() => {
+            console.log(`Row with id ${row.id} updated`);
+          })
+          .catch(err => {
+            console.error(err);
+            const newData = [...data];
+            newData[index] = { ...row }; // Revert the changes made to the row
+            setData(newData);
+          });
+      } else {
+        createMerchandise(row)
+          .then((id) => {
+            id = row.id;
+            const newData = [...data];
+            newData[index] = { ...row }; // Update the row with the new id
+            console.log(`Row with id ${id} has been saved`);
+            setData(newData);
+          })
+          .catch(err => {
+            console.error(err);
+          });
+      }
+    });
   };
+  
+  
     
 
   const handleExportData = () => {
