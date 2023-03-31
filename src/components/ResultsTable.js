@@ -1,29 +1,36 @@
-import React, { useState, useEffect } from "react";
-
-function ResultsTable() {
-    const [loaded, setLoaded] = useState(null);
-
-    useEffect(() => {
-      async function fetchData() {
-        const response = await fetch(
-          "https://sheetdb.io/api/v1/nc7krlodazbab?sheet=Calculation",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2",
-            },
-          }
-        );
-        const data = await response.json();
-        setLoaded(data[0]); // set loaded to the second row of the response data array
-      }
-      fetchData();
-    }, []);
+import * as calculations from './backend/calculations';
+import { ccData } from './MerchTable';
     
-    if (!loaded) {
-      return <div>Loading data...</div>;
-    }
+function ResultsTable() {
+  async function getTotalGross(data) {
+    const response = await fetch('/api/total_gross', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    const result = await response.json();
+    return result;
+  }
+  
+  // Call getTotalGross with your data and handle the result
+  const data = [...]; // Your data from the database
+  getTotalGross(data).then(result => {
+    console.log(result);
+  });
+  
+    /*const totalGross = calculations.get_total_gross(data);
+    const softGross = calculations.get_soft_gross(data);
+    const hardGross = calculations.get_hard_gross(data);
+    const softNet = calculations.get_soft_net(data);
+    const hardNet = calculations.get_hard_net(data);
+    const casinoOwedSoft = calculations.get_casino_owed_soft(data);
+    const casinoOwedHard = calculations.get_casino_owed_hard(data);
+    const totalCasinoOwed = calculations.get_total_casino_owed(data);
+    const bandRevenue = calculations.get_band_revenue(data);*/
+
+    
     
     return (
       <div>
@@ -44,16 +51,16 @@ function ResultsTable() {
           </thead>
           <tbody>
             <tr>
-              <td>{loaded.totalGross}</td>
-              <td>{loaded.softGross}</td>
-              <td>{loaded.hardGross}</td>
-              <td>{loaded.ccFee}</td>
-              <td>{loaded.totalSoftNet}</td>
-              <td>{loaded.totalHardNet}</td>
-              <td>{loaded.casinoOwedSoft}</td>
-              <td>{loaded.casinoOwedHard}</td>
-              <td>{loaded.totalCasinoOwed}</td>
-              <td>{loaded.bandRevenue}</td>
+              <td>{getTotalGross}</td>
+              <td>{getSoftGross}</td>
+              <td>{getHardGross}</td>
+              <td>{ccData.fee}</td>
+              <td>{getSoftNet}</td>
+              <td>{getHardNet}</td>
+              <td>{getCasinoOwedSoft}</td>
+              <td>{getCasinoOwedHard}</td>
+              <td>{getTotalCasinoOwed}</td>
+              <td>{getBandRevenue}</td>
             </tr>
           </tbody>
         </table>

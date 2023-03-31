@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getAllMerchandise, createMerchandise, updateMerchandise, deleteMerchandise, deleteAllMerchandise } from './Database';
+export const ccData = {
+  sales: 100,
+  percentage: 2.5,
+  fee: 0.25
+};
 
 function MerchTable() {
-  const [data, setData] = useState([{ id: 0, item: '', size: '', price: 0, countIn: 0, countOut: 0, comps: 0, isHard: false }]);
+  const [data, setData] = useState([{ id: null, item: '', size: '', price: 0, countIn: 0, countOut: 0, comps: 0, isHard: false }]);
   const [ccData, setCcData] = useState({ sales: 0, percentage: 0, fee: 0 });
 
   useEffect(() => {
@@ -135,6 +140,7 @@ function MerchTable() {
     const { value } = event.target;
     setCcData({ ...ccData, [field]: value });
   };
+  
 
   return (
     <div>
