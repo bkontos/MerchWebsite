@@ -1,3 +1,4 @@
+from src.components.MerchTable import ccFee
 """
 def get_gross_per_item(data):
     gross_per_item = 0
@@ -9,6 +10,8 @@ def get_gross_per_item(data):
         gross_per_item = (countIn - comps - countOut) * price
         return gross_per_item
 """
+tax = 1.063
+se_fee = 95
 
 def get_total_gross(data):
     total_gross = 0
@@ -50,7 +53,7 @@ def get_hard_gross(data):
 
 def get_soft_net(data):
     soft_net = 0
-    
+    soft_net = (get_soft_gross(data)/tax) - ccFee - se_fee
     return soft_net
 
 def get_hard_net(data):
