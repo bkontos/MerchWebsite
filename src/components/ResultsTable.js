@@ -110,15 +110,15 @@ function ResultsTable() {
 
     setResults({
         //gross_per_item: json1,
-        total_gross: json2,
-        soft_gross: json3,
-        hard_gross: json4,
-        soft_net: json5,
-        hard_net: json6,
-        casino_owed_soft: json7,
-        casino_owed_hard: json8,
-        total_casino_owed: json9,
-        band_revenue: json10
+        total_gross: json2.toFixed(2),
+        soft_gross: json3.toFixed(2),
+        hard_gross: json4.toFixed(2),
+        soft_net: json5.toFixed(2),
+        hard_net: json6.toFixed(2),
+        casino_owed_soft: json7.toFixed(2),
+        casino_owed_hard: json8.toFixed(2),
+        total_casino_owed: json9.toFixed(2),
+        band_revenue: json10.toFixed(2)
     });
 };
 

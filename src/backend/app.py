@@ -9,8 +9,8 @@ CORS(app)
 def gross_per_item():
     data = request.get_json()
     result = get_gross_per_item(data)
-    return jsonify(result)
-    """
+    return jsonify(result)"""
+
 
 @app.route('/api/total_gross', methods=['POST'])
 def total_gross():
