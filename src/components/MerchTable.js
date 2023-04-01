@@ -34,6 +34,11 @@ function MerchTable() {
     const newData = [...data];
     const row = newData[rowIndex];
     row[field] = type === 'checkbox' ? checked : value;
+    if (type === 'checkbox') {
+      row[field] = checked; // convert to boolean
+    } else {
+      row[field] = value;
+    }
     setData(newData);
   };
 

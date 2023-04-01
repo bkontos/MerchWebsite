@@ -1,13 +1,11 @@
 import './App.css';
 import MerchTable from './components/MerchTable'
 import ResultsTable from './components/ResultsTable';
-//import ResultsTable from './components/ResultsTable';
 
 function App() {
 
   return (
-      <div className="app-container">
-        <h1>Talking Stick Resort Merch</h1>
+    <div>
       <MerchTable />
       <ResultsTable />
     </div>

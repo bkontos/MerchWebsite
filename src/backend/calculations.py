@@ -1,45 +1,50 @@
+"""
 def get_gross_per_item(data):
-    gross = 0
+    gross_per_item = 0
     for row in data:
-        count_in = row['countIn']
-        count_out = row['countOut']
+        countIn = row['countIn']
+        countOut = row['countOut']
         comps = row['comps']
         price = row['price']
-        gross = (count_in - comps - count_out) * price
-        return gross
+        gross_per_item = (countIn - comps - countOut) * price
+        return gross_per_item
+"""
 
 def get_total_gross(data):
     total_gross = 0
+    gross = 0
     for row in data:
-        count_in = row['countIn']
-        count_out = row['countOut']
+        countIn = row['countIn']
+        countOut = row['countOut']
         comps = row['comps']
         price = row['price']
-        gross = (count_in - comps - count_out) * price
+        gross = (float(countIn) - float(comps) - float(countOut)) * float(price)
         total_gross += gross
     return total_gross
 
 def get_soft_gross(data):
     soft_gross = 0
+    gross = 0
     for row in data:
         if not row['isHard']:
-            count_in = row['countIn']
-            count_out = row['countOut']
+            countIn = row['countIn']
+            countOut = row['countOut']
             comps = row['comps']
             price = row['price']
-            gross = (count_in - comps - count_out) * price
+            gross = (float(countIn) - float(comps) - float(countOut)) * float(price)
             soft_gross += gross
     return soft_gross
 
 def get_hard_gross(data):
     hard_gross = 0
+    gross = 0
     for row in data:
-        if not row['isHard']:
-            count_in = row['countIn']
-            count_out = row['countOut']
+        if row['isHard']:
+            countIn = row['countIn']
+            countOut = row['countOut']
             comps = row['comps']
             price = row['price']
-            gross = (count_in - comps - count_out) * price
+            gross = (float(countIn) - float(comps) - float(countOut)) * float(price)
             hard_gross += gross
     return hard_gross
 
