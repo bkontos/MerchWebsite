@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAllMerchandise, createMerchandise, updateMerchandise, deleteMerchandise, deleteAllMerchandise } from './Database';
+import { getAllMerchandise, createMerchandise, updateMerchandise, deleteMerchandise, deleteAllMerchandise, getCcInfo, createCCInfo, updateCcInfo } from './Database';
 export const ccData = {
   sales: 100,
   percentage: 2.5,
@@ -19,15 +19,14 @@ function MerchTable() {
         console.error(err);
       });
 
-    const savedCcData = localStorage.getItem('ccData');
-    if (savedCcData) {
-      setCcData(JSON.parse(savedCcData));
-    }
+      getCcInfo()
+      .then(rows => {
+        setCcData(rows);
+      })
+      .catch(err => {
+        console.error(err);
+      });
   }, []);
-
-  useEffect(() => {
-    localStorage.setItem('ccData', JSON.stringify(ccData));
-  }, [ccData]);
 
   const handleInputChange = (event, rowIndex, field) => {
     const { value, type, checked } = event.target;
