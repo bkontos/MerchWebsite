@@ -1,3 +1,4 @@
+import * as XLSX from 'xlsx';
 import React, { useState, useEffect } from 'react';
 import { getAllMerchandise, createMerchandise, updateMerchandise, deleteMerchandise, deleteAllMerchandise, getCcInfo, updateCcInfo } from './Database';
 
@@ -138,11 +139,20 @@ function MerchTable(props) {
     handleCcInfoSave();
   };
   
-  
-    
-
   const handleExportData = () => {
-    //export data to a CSV File
+    // Only include columns needed for export
+    const exportData = data.map(({ item, size, price, countIn, countOut }) => ({ item, size, price, countIn, countOut }));
+  
+    // Convert data to worksheet format
+    const worksheet = XLSX.utils.json_to_sheet(exportData);
+  
+    // Create workbook and add worksheet
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Merchandise Data');
+  
+    // Save file to local machine
+    const filename = 'merchandise-data.xlsx';
+    XLSX.writeFile(workbook, filename);
   };
   
   const handleCcInfoSave = () => {
