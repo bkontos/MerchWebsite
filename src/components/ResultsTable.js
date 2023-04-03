@@ -1,5 +1,6 @@
 import { getAllMerchandise, getCcInfo } from './Database';
 import React, { useState, useEffect } from 'react';
+import PopUp from './PopUp';
 
 function ResultsTable(props) {
   const [results, setResults] = useState({
@@ -15,6 +16,8 @@ function ResultsTable(props) {
     total_casino_owed: 0,
     band_revenue: 0,
   });
+
+  const [showPopUp, setShowPopUp] = useState(false);
 
   const fetchData = async () => {
     const data = await getAllMerchandise();
@@ -137,6 +140,10 @@ useEffect(() => {
     fetchData();
 }, [props.dataUpdated]);
 
+const handlePopUp = () => {
+    setShowPopUp(!showPopUp);
+  };
+
     return (
       <div>
         <table>
@@ -167,8 +174,12 @@ useEffect(() => {
               <td>{results.total_casino_owed}</td>
               <td>{results.band_revenue}</td>
             </tr>
+            <th>
+              <button onClick={handlePopUp}>View Calculations</button>
+            </th>
           </tbody>
         </table>
+        {showPopUp && <PopUp results={results} />}
       </div>
     );
 }
