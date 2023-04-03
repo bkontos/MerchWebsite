@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { getAllMerchandise, createMerchandise, updateMerchandise, deleteMerchandise, deleteAllMerchandise, getCcInfo, createCCInfo, updateCcInfo } from './Database';
-export const ccData = {
-  sales: 100,
-  percentage: 2.5,
-  fee: 0.25
-};
+import { getAllMerchandise, createMerchandise, updateMerchandise, deleteMerchandise, deleteAllMerchandise, getCcInfo, updateCcInfo } from './Database';
 
-function MerchTable() {
+function MerchTable(props) {
   const [data, setData] = useState([{ id: null, item: '', size: '', price: 0, countIn: 0, countOut: 0, comps: 0, isHard: false }]);
-  const [ccData, setCcData] = useState({ sales: 0, percentage: 0, fee: 0 });
+  const [ccData, setCcData] = useState({ ccId: 1, ccSales: 0, ccPercentage: 0, ccFee: 0 });
 
   useEffect(() => {
     getAllMerchandise()
@@ -19,14 +14,19 @@ function MerchTable() {
         console.error(err);
       });
 
-      getCcInfo()
+    getCcInfo()
       .then(rows => {
-        setCcData(rows);
+        setCcData(rows[0]);
       })
       .catch(err => {
         console.error(err);
       });
   }, []);
+
+  useEffect(() => {
+    const ccFee = ccData.ccSales * ccData.ccPercentage / 100;
+    setCcData(prevCcData => ({ ...prevCcData, ccFee })); // use a functional update
+  }, [ccData.ccSales, ccData.ccPercentage]);
 
   const handleInputChange = (event, rowIndex, field) => {
     const { value, type, checked } = event.target;
@@ -39,9 +39,17 @@ function MerchTable() {
       row[field] = value;
     }
     setData(newData);
-  };
-
   
+    if (ccData && (field === 'ccSales' || field === 'ccPercentage')) {
+      setCcData(prevCcData => ({
+        ...prevCcData,
+        [field]: value,
+        ccFee: (value / 100) * (prevCcData.ccSales || 0)
+      }));
+    }
+  };
+  
+
   const handleDeleteRow = (rowIndex) => {
     const row = data[rowIndex];
     if (row.id) {
@@ -50,6 +58,7 @@ function MerchTable() {
           const newData = [...data];
           newData.splice(rowIndex, 1);
           setData(newData);
+          props.onDataUpdated();
         })
         .catch(err => {
           console.error(err);
@@ -58,6 +67,7 @@ function MerchTable() {
       const newData = [...data];
       newData.splice(rowIndex, 1);
       setData(newData);
+      props.onDataUpdated();
     }
   };
 
@@ -67,6 +77,7 @@ function MerchTable() {
       updateMerchandise(row.id, row)
         .then(() => {
           console.log(`Row with id ${row.id} updated`);
+          props.onDataUpdated();          
         })
         .catch(err => {
           console.error(err);
@@ -78,6 +89,7 @@ function MerchTable() {
           newData[rowIndex] = { ...row, id: newRow.id }; // Update the id property
           setData(newData);
           console.log(`A row has been inserted with rowid ${row.id}`);
+          props.onDataUpdated();          
         })
         .catch(err => {
           console.error(err);
@@ -99,12 +111,14 @@ function MerchTable() {
         updateMerchandise(row.id, row)
           .then(() => {
             console.log(`Row with id ${row.id} updated`);
+            props.onDataUpdated();            
           })
           .catch(err => {
             console.error(err);
             const newData = [...data];
             newData[index] = { ...row }; // Revert the changes made to the row
             setData(newData);
+            props.onDataUpdated();
           });
       } else {
         createMerchandise(row)
@@ -114,12 +128,14 @@ function MerchTable() {
             newData[index] = { ...row }; // Update the row with the new id
             console.log(`Row with id ${id} has been saved`);
             setData(newData);
+            props.onDataUpdated();            
           })
           .catch(err => {
             console.error(err);
           });
       }
     });
+    handleCcInfoSave();
   };
   
   
@@ -128,23 +144,59 @@ function MerchTable() {
   const handleExportData = () => {
     //export data to a CSV File
   };
+  
+  const handleCcInfoSave = () => {
+    if (ccData.ccFee) {
+      // If ccFee is already present, update ccData state with it
+      updateCcInfo(ccData.ccId, ccData)
+        .then(() => {
+          console.log('Credit card info updated successfully');
+          props.onDataUpdated();          
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    } else {
+      // Calculate ccFee and then update ccData state
+      setCcData(prevCcData => ({
+        ...prevCcData,
+        ccFee: (prevCcData.ccSales / 100) * prevCcData.ccPercentage
+      }));
+      updateCcInfo(ccData.ccId, ccData)
+        .then(() => {
+          console.log('Credit card info updated successfully');
+          props.onDataUpdated();
+        })
+        .catch(err => {
+          console.error(err);
+        });
+    }
+  };
+
+  const handleClearCcInfo = () => {
+    setCcData({ ccId: 1, ccSales: 0, ccPercentage: 0, ccFee: 0 });
+    try {
+      const updatedCcInfo = { ...ccData[0], ccSales: 0, ccPercentage: 0, ccFee: 0 };
+      updateCcInfo(updatedCcInfo.ccId, updatedCcInfo);  
+      console.log('Credit card info cleared successfully');
+      props.onDataUpdated();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleDeleteAll = async () => {
     try {
       const response = await deleteAllMerchandise();
       console.log(response.message);
       setData([]);
+      setCcData({ ccId: 1, ccSales: 0, ccPercentage: 0, ccFee: 0 });
+      handleCcInfoSave();
+      props.onDataUpdated();
     } catch (error) {
       console.error('Error deleting merchandise table', error);
     }
   };
-  
-
-  const handleCcInputChange = (event, field) => {
-    const { value } = event.target;
-    setCcData({ ...ccData, [field]: value });
-  };
-  
 
   return (
     <div>
@@ -192,13 +244,18 @@ function MerchTable() {
             </tr>
           ))}
             <tr>
-              <td>Credit Card Sales:</td>
-              <td><input type="number" value={ccData.sales} onChange={(event) => handleCcInputChange(event, "sales")} /></td>
-              <td>Credit Card Percentage:</td>
-              <td><input type="number" value={ccData.percentage} onChange={(event) => handleCcInputChange(event, "percentage")} /></td>
-              <td>Credit Card Fee:</td>
-              <td><input type="number" value={ccData.fee} onChange={(event) => handleCcInputChange(event, "fee")} /></td>
-            </tr>
+  <td>Credit Card Sales:</td>
+  <td><input type="number" value={ccData.ccSales} onChange={(event) => setCcData({ ...ccData, ccSales: event.target.value })} /></td>
+  <td>Credit Card Percentage:</td>
+  <td><input type="number" value={ccData.ccPercentage} onChange={(event) => setCcData({ ...ccData, ccPercentage: event.target.value })} /></td>
+  <td>Credit Card Fee:</td>
+  <td><input type="number" value={ccData.ccFee} onChange={(event) => setCcData({ ...ccData, ccFee: event.target.value })} /></td>
+  <td></td>
+  <td>
+    <button onClick={handleCcInfoSave}>Save CCFee Info</button>
+    <button onClick={handleClearCcInfo}>Clear Credit Card Info</button>
+  </td>
+</tr>
         </tbody>
     </table>
     <button onClick={handleAddRow}>Add Row</button>

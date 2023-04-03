@@ -78,21 +78,6 @@ const deleteMerchandise = async (id) => {
     const data = await response.json();
     return data;
   };
-  
-  const createCCInfo = async (ccInfo) => {
-    const id = generateNumericId(); // generate a unique numeric id
-    ccInfo.id = id; // set the id property of the merchandise object to the generated id
-    const response = await fetch('https://sheetdb.io/api/v1/nc7krlodazbab?sheet=CCSheet', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2"
-      },
-      body: JSON.stringify(ccInfo)
-    });
-    const ccData = await response.json();
-    return ccData;
-  };
 
   const getCcInfo = async () => {
     const response = await fetch('https://sheetdb.io/api/v1/nc7krlodazbab?sheet=CCSheet', {
@@ -106,9 +91,10 @@ const deleteMerchandise = async (id) => {
     return ccData;
   };
 
-  const updateCcInfo = async (id, ccInfo) => {
-    console.log('Updating merchandise with id:', id, 'and data:', ccInfo)
-    const response = await fetch(`https://sheetdb.io/api/v1/nc7krlodazbab/id/${id}?sheet=CCSheet`, {
+  const updateCcInfo = async (ccId, ccInfo) => {
+    ccId = 1;
+    console.log('Updating credit card info with id:', ccId, 'and data:', ccInfo)
+    const response = await fetch(`https://sheetdb.io/api/v1/nc7krlodazbab/id/${ccId}?sheet=CCSheet`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -118,7 +104,7 @@ const deleteMerchandise = async (id) => {
     });
     const ccData = await response.json();
     if (!response.ok) {
-      console.error(`Failed to update credit card info with id ${id}: ${ccData.message}`);
+      console.error(`Failed to update credit card info with id ${ccId}: ${ccData.message}`);
     }
     return ccData;
   };
@@ -131,7 +117,5 @@ module.exports = {
     deleteMerchandise,
     deleteAllMerchandise,
     getCcInfo,
-    createCCInfo,
     updateCcInfo
-
 }

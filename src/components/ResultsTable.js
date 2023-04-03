@@ -1,13 +1,13 @@
-import { ccData } from './MerchTable';
-import { getAllMerchandise } from './Database';
+import { getAllMerchandise, getCcInfo } from './Database';
 import React, { useState, useEffect } from 'react';
 
-function ResultsTable() {
+function ResultsTable(props) {
   const [results, setResults] = useState({
     //gross_per_item: 0,
     total_gross: 0,
     soft_gross: 0,
     hard_gross: 0,
+    cc_fee: 0,
     soft_net: 0,
     hard_net: 0,
     casino_owed_soft: 0,
@@ -18,6 +18,7 @@ function ResultsTable() {
 
   const fetchData = async () => {
     const data = await getAllMerchandise();
+    const ccData = await getCcInfo();
     /*const response1 = await fetch('/api/gross_per_item', {
         method: 'POST',
         headers: {
@@ -59,7 +60,7 @@ function ResultsTable() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({data: data, ccData: ccData})
     });
     const json5 = await response5.json();
 
@@ -77,7 +78,7 @@ function ResultsTable() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({data: data, ccData: ccData})
     });
     const json7 = await response7.json();
 
@@ -95,7 +96,7 @@ function ResultsTable() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({data: data, ccData: ccData})
     });
     const json9 = await response9.json();
 
@@ -104,9 +105,18 @@ function ResultsTable() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({data: data, ccData: ccData})
     });
     const json10 = await response10.json();
+
+    const response11 = await fetch('http://localhost:5000/api/cc_fee', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ccData)
+    });
+    const json11 = await response11.json();
 
     setResults({
         //gross_per_item: json1,
@@ -118,15 +128,14 @@ function ResultsTable() {
         casino_owed_soft: json7.toFixed(2),
         casino_owed_hard: json8.toFixed(2),
         total_casino_owed: json9.toFixed(2),
-        band_revenue: json10.toFixed(2)
+        band_revenue: json10.toFixed(2),
+        cc_fee: json11.toFixed(2)
     });
 };
 
 useEffect(() => {
     fetchData();
-}, []);
-
-        
+}, [props.dataUpdated]);
 
     return (
       <div>
@@ -150,7 +159,7 @@ useEffect(() => {
               <td>{results.total_gross}</td>
               <td>{results.soft_gross}</td>
               <td>{results.hard_gross}</td>
-              <td>{ccData.fee}</td>
+              <td>{results.cc_fee}</td>
               <td>{results.soft_net}</td>
               <td>{results.hard_net}</td>
               <td>{results.casino_owed_soft}</td>
@@ -162,7 +171,5 @@ useEffect(() => {
         </table>
       </div>
     );
-    
 }
-
 export default ResultsTable;
