@@ -35,51 +35,57 @@ useEffect(() => {
         <h2>Calculations</h2>
         <table>
           <tbody>
-          {grossPerItem.map((gross, index) => (
-              <tr key={index}>
-                <td>Gross per Item {index + 1}</td>
-                <td>{gross}</td>
-              </tr>
-            ))}
             <tr>
-              <td>Total Gross</td>
+              <th>Tax</th>
+              <td>6.3%</td>
+            </tr>
+            <tr>
+              <th>SE Fee</th>
+              <td>$95</td>
+            </tr>
+            <tr>
+              <th>Gross Per Item</th>
+              <td>{grossPerItem.join(' + ')}</td>
+            </tr>
+            <tr>
+              <th>Total Gross</th>
               <td>{total_gross}</td>
             </tr>
             <tr>
-              <td>Total Soft Gross</td>
+              <th>Total Soft Gross</th>
               <td>{soft_gross}</td>
             </tr>
             <tr>
-              <td>Total Hard Gross</td>
+              <th>Total Hard Gross</th>
               <td>{hard_gross}</td>
             </tr>
             <tr>
-              <td>Credit Card Fee</td>
+              <th>Credit Card Fee</th>
               <td>{cc_fee}</td>
             </tr>
             <tr>
-              <td>Total Soft Net</td>
-              <td>{soft_net}</td>
+              <th>Total Soft Net</th>
+              <td>({soft_gross} / 1.063) - {cc_fee} - 95 = {soft_net}</td>
             </tr>
             <tr>
-              <td>Total Hard Net</td>
-              <td>{hard_net}</td>
+              <th>Total Hard Net</th>
+              <td>{hard_gross} / 1.063 = {hard_net}</td>
             </tr>
             <tr>
-              <td>Total Soft Owed Casino</td>
-              <td>{casino_owed_soft}</td>
+              <th>Total Soft Owed Casino</th>
+              <td>{soft_net} * .2 = {casino_owed_soft}</td>
             </tr>
             <tr>
-              <td>Total Hard Owed Casino</td>
-              <td>{casino_owed_hard}</td>
+              <th>Total Hard Owed Casino</th>
+              <td>{hard_net} * .1 = {casino_owed_hard}</td>
             </tr>
             <tr>
-              <td>Total Owed Casino</td>
-              <td>{total_casino_owed}</td>
+              <th>Total Owed Casino</th>
+              <td>{casino_owed_soft} + {casino_owed_hard} = {total_casino_owed}</td>
             </tr>
             <tr>
-              <td>Band Revenue Received</td>
-              <td>{band_revenue}</td>
+              <th>Band Revenue Received</th>
+              <td>{total_gross} / 1.063 - {total_casino_owed} = {band_revenue}</td>
             </tr>
           </tbody>
         </table>

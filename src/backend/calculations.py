@@ -12,7 +12,7 @@ def get_gross_per_item(data):
         comps = row['comps']
         price = row['price']
         gross = (float(countIn) - float(comps) - float(countOut)) * float(price)
-        gross_per_item.append(gross)
+        gross_per_item.append(float(gross))
     return gross_per_item
 
 
