@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { getAllMerchandise } from './Database'
 
 function PopUp(props) {
-    const { band_revenue } = props.results;
-    const [grossPerItem, setGrossPerItem] = useState({
-        gross_per_item: 0
-      });
+    const { total_gross, soft_gross, hard_gross, cc_fee, soft_net, hard_net, casino_owed_soft, casino_owed_hard, total_casino_owed, band_revenue } = props.results;
+    const [grossPerItem, setGrossPerItem] = useState([]);
 
       const { handleClose } = props;
 
@@ -20,11 +18,9 @@ function PopUp(props) {
         body: JSON.stringify(data)
     });
     const json = await response.json();
-
-    setGrossPerItem({
-        gross_per_item: json.toFixed(2)
-    });
+    setGrossPerItem(json.map(gross => parseFloat(gross).toFixed(2)));
 };
+
 useEffect(() => {
     fetchData();
 }, []);
@@ -39,37 +35,47 @@ useEffect(() => {
         <h2>Calculations</h2>
         <table>
           <tbody>
-            <tr>
-              <td>Gross per Item</td>
-              {/*need to find a way to display gross_per_item in the table because it is an array*/}
-              <td>{grossPerItem.gross_per_item}</td>
-            </tr>
+          {grossPerItem.map((gross, index) => (
+              <tr key={index}>
+                <td>Gross per Item {index + 1}</td>
+                <td>{gross}</td>
+              </tr>
+            ))}
             <tr>
               <td>Total Gross</td>
+              <td>{total_gross}</td>
             </tr>
             <tr>
               <td>Total Soft Gross</td>
+              <td>{soft_gross}</td>
             </tr>
             <tr>
               <td>Total Hard Gross</td>
+              <td>{hard_gross}</td>
             </tr>
             <tr>
               <td>Credit Card Fee</td>
+              <td>{cc_fee}</td>
             </tr>
             <tr>
               <td>Total Soft Net</td>
+              <td>{soft_net}</td>
             </tr>
             <tr>
               <td>Total Hard Net</td>
+              <td>{hard_net}</td>
             </tr>
             <tr>
               <td>Total Soft Owed Casino</td>
+              <td>{casino_owed_soft}</td>
             </tr>
             <tr>
               <td>Total Hard Owed Casino</td>
+              <td>{casino_owed_hard}</td>
             </tr>
             <tr>
               <td>Total Owed Casino</td>
+              <td>{total_casino_owed}</td>
             </tr>
             <tr>
               <td>Band Revenue Received</td>
