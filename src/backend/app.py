@@ -5,11 +5,11 @@ from calculations import *
 app = Flask(__name__)
 CORS(app)
 
-"""@app.route('/api/gross_per_item', methods=['POST'])
+@app.route('/api/gross_per_item', methods=['POST'])
 def gross_per_item():
     data = request.get_json()
     result = get_gross_per_item(data)
-    return jsonify(result)"""
+    return jsonify(result)
 
 
 @app.route('/api/total_gross', methods=['POST'])

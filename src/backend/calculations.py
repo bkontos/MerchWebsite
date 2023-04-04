@@ -2,17 +2,19 @@ tax = 1.063
 se_fee = 95
 soft_percentage = .2
 hard_percentage = .1
-"""
+
 def get_gross_per_item(data):
-    gross_per_item = 0
+    gross_per_item = []
+    gross = 0
     for row in data:
         countIn = row['countIn']
         countOut = row['countOut']
         comps = row['comps']
         price = row['price']
-        gross_per_item = (countIn - comps - countOut) * price
-        return gross_per_item
-"""
+        gross = (float(countIn) - float(comps) - float(countOut)) * float(price)
+        gross_per_item.append(gross)
+    return gross_per_item
+
 
 def get_total_gross(data):
     total_gross = 0

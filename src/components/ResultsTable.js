@@ -4,7 +4,6 @@ import PopUp from './PopUp';
 
 function ResultsTable(props) {
   const [results, setResults] = useState({
-    //gross_per_item: 0,
     total_gross: 0,
     soft_gross: 0,
     hard_gross: 0,
@@ -22,14 +21,7 @@ function ResultsTable(props) {
   const fetchData = async () => {
     const data = await getAllMerchandise();
     const ccData = await getCcInfo();
-    /*const response1 = await fetch('/api/gross_per_item', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
-    const json1 = await response1.json();*/
+    
 
     const response2 = await fetch('http://localhost:5000/api/total_gross', {
         method: 'POST',
@@ -122,7 +114,6 @@ function ResultsTable(props) {
     const json11 = await response11.json();
 
     setResults({
-        //gross_per_item: json1,
         total_gross: json2.toFixed(2),
         soft_gross: json3.toFixed(2),
         hard_gross: json4.toFixed(2),
@@ -174,12 +165,10 @@ const handlePopUp = () => {
               <td>{results.total_casino_owed}</td>
               <td>{results.band_revenue}</td>
             </tr>
-            <th>
-              <button onClick={handlePopUp}>View Calculations</button>
-            </th>
           </tbody>
         </table>
-        {showPopUp && <PopUp results={results} />}
+        <button onClick={handlePopUp}>View Calculations</button>
+        {showPopUp && <PopUp results={results} handleClose={handlePopUp} />}
       </div>
     );
 }
