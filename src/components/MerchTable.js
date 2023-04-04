@@ -245,7 +245,7 @@ function MerchTable(props) {
                 <input type="number" value={row.comps} onChange={(event) => handleInputChange(event, rowIndex, "comps")} />
               </td>
               <td>
-                <input type="checkbox" value={row.isHard} onChange={(event) => handleInputChange(event, rowIndex, "isHard")} />
+                <input type="checkbox" checked={row.isHard} onChange={(event) => handleInputChange(event, rowIndex, "isHard")} />
               </td>
               <td>
               <button onClick={() => handleDeleteRow(rowIndex)}>Delete</button>
