@@ -12,6 +12,10 @@ function App() {
 
   return (
     <div>
+      <section className="hero">
+        <h1>Welcome to the Merchandise Calculator</h1>
+        <p>Get merch done quick</p>
+      </section>
       <MerchTable onDataUpdated={handleDataUpdated} />
       <ResultsTable dataUpdated={dataUpdated} />
     </div>
