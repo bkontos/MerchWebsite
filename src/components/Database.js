@@ -8,7 +8,7 @@ const generateNumericId = () => {
   return id;
 };
 
-const createMerchandise = async (merchandise) => {
+export const createMerchandise = async (merchandise) => {
   const id = generateNumericId(); // generate a unique numeric id
   merchandise.id = id; // set the id property of the merchandise object to the generated id
   const response = await fetch('https://sheetdb.io/api/v1/nc7krlodazbab', {
@@ -23,7 +23,7 @@ const createMerchandise = async (merchandise) => {
   return data;
 };
 
-const getAllMerchandise = async () => {
+export const getAllMerchandise = async () => {
   const response = await fetch('https://sheetdb.io/api/v1/nc7krlodazbab', {
     method: 'GET',
     headers: {
@@ -35,7 +35,7 @@ const getAllMerchandise = async () => {
   return data;
 };
   
-const updateMerchandise = async (id, merchandise) => {
+export const updateMerchandise = async (id, merchandise) => {
   console.log('Updating merchandise with id:', id, 'and data:', merchandise)
   const response = await fetch(`https://sheetdb.io/api/v1/nc7krlodazbab/id/${id}`, {
     method: 'PATCH',
@@ -53,7 +53,7 @@ const updateMerchandise = async (id, merchandise) => {
 };
 
   
-const deleteMerchandise = async (id) => {
+export const deleteMerchandise = async (id) => {
     console.log(`Deleting merchandise with id ${id}`);
     const response = await fetch(`https://sheetdb.io/api/v1/nc7krlodazbab/id/${id}`, {
       method: 'DELETE',
@@ -67,7 +67,7 @@ const deleteMerchandise = async (id) => {
     return data;
   };
 
-  const deleteAllMerchandise = async () => {
+  export const deleteAllMerchandise = async () => {
     const response = await fetch('https://sheetdb.io/api/v1/nc7krlodazbab/all', {
       method: 'DELETE',
       headers: {
@@ -79,7 +79,7 @@ const deleteMerchandise = async (id) => {
     return data;
   };
 
-  const getCcInfo = async () => {
+  export const getCcInfo = async () => {
     const response = await fetch('https://sheetdb.io/api/v1/nc7krlodazbab?sheet=CCSheet', {
       method: 'GET',
       headers: {
@@ -91,7 +91,7 @@ const deleteMerchandise = async (id) => {
     return ccData;
   };
 
-  const updateCcInfo = async (ccId, ccInfo) => {
+  export const updateCcInfo = async (ccId, ccInfo) => {
     ccId = 1;
     console.log('Updating credit card info with id:', ccId, 'and data:', ccInfo)
     const response = await fetch(`https://sheetdb.io/api/v1/nc7krlodazbab/id/${ccId}?sheet=CCSheet`, {
@@ -108,14 +108,3 @@ const deleteMerchandise = async (id) => {
     }
     return ccData;
   };
-  
-  
-module.exports = {
-    getAllMerchandise,
-    createMerchandise,
-    updateMerchandise,
-    deleteMerchandise,
-    deleteAllMerchandise,
-    getCcInfo,
-    updateCcInfo
-}
