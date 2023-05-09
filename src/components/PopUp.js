@@ -10,7 +10,7 @@ function PopUp(props) {
       const fetchData = async () => {
         const data = await getAllMerchandise();
 
-        const response = await fetch('http://localhost:5000/api/gross_per_item', {
+        const response = await fetch('http://mymerchcalc4you.com/api/gross_per_item', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

@@ -23,7 +23,7 @@ function ResultsTable(props) {
     const ccData = await getCcInfo();
     
 
-    const response2 = await fetch('http://localhost:5000/api/total_gross', {
+    const response2 = await fetch('http://mymerchcalc4you.com/api/total_gross', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ function ResultsTable(props) {
     });
     const json2 = await response2.json();
 
-    const response3 = await fetch('http://localhost:5000/api/soft_gross', {
+    const response3 = await fetch('http://mymerchcalc4you.com/api/soft_gross', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -41,7 +41,7 @@ function ResultsTable(props) {
     });
     const json3 = await response3.json();
 
-    const response4 = await fetch('http://localhost:5000/api/hard_gross', {
+    const response4 = await fetch('http://mymerchcalc4you.com/api/hard_gross', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -50,7 +50,7 @@ function ResultsTable(props) {
     });
     const json4 = await response4.json();
 
-    const response5 = await fetch('http://localhost:5000/api/soft_net', {
+    const response5 = await fetch('http://mymerchcalc4you.com/api/soft_net', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -59,7 +59,7 @@ function ResultsTable(props) {
     });
     const json5 = await response5.json();
 
-    const response6 = await fetch('http://localhost:5000/api/hard_net', {
+    const response6 = await fetch('http://mymerchcalc4you.com/api/hard_net', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -68,7 +68,7 @@ function ResultsTable(props) {
     });
     const json6 = await response6.json();
 
-    const response7 = await fetch('http://localhost:5000/api/casino_owed_soft', {
+    const response7 = await fetch('http://mymerchcalc4you.com/api/casino_owed_soft', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -77,7 +77,7 @@ function ResultsTable(props) {
     });
     const json7 = await response7.json();
 
-    const response8 = await fetch('http://localhost:5000/api/casino_owed_hard', {
+    const response8 = await fetch('http://mymerchcalc4you.com/api/casino_owed_hard', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -86,7 +86,7 @@ function ResultsTable(props) {
     });
     const json8 = await response8.json();
 
-    const response9 = await fetch('http://localhost:5000/api/total_casino_owed', {
+    const response9 = await fetch('http://mymerchcalc4you.com/api/total_casino_owed', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ function ResultsTable(props) {
     });
     const json9 = await response9.json();
 
-    const response10 = await fetch('http://localhost:5000/api/band_revenue', {
+    const response10 = await fetch('http://mymerchcalc4you.com/api/band_revenue', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -104,7 +104,7 @@ function ResultsTable(props) {
     });
     const json10 = await response10.json();
 
-    const response11 = await fetch('http://localhost:5000/api/cc_fee', {
+    const response11 = await fetch('http://mymerchcalc4you.com/api/cc_fee', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
