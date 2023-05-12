@@ -79,6 +79,3 @@ def band_revenue():
     ccData = request_data['ccData']
     result = get_band_revenue(data, ccData)
     return jsonify(result)
-
-if __name__ == 'app':
-    debug=False
