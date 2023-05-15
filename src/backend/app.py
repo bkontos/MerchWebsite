@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from werkzeug.middleware.proxy_fix import ProxyFix
 from calculations import *
 
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(app.wsgi_app)  # Only use this if you trust your reverse proxy
 CORS(app)
 
 @app.route('/api/gross_per_item', methods=['POST'])
@@ -38,11 +40,16 @@ def cc_fee():
 
 @app.route('/api/soft_net', methods=['POST'])
 def soft_net():
-    request_data = request.get_json()
-    data = request_data['data']
-    ccData = request_data['ccData']
-    result = get_soft_net(data, ccData)
-    return jsonify(result)
+    try:
+        request_data = request.get_json()
+        data = request_data['data']
+        ccData = request_data['ccData']
+        result = get_soft_net(data, ccData)
+        return jsonify(result)
+    except Exception as e:
+        app.logger.error(f"An error occurred: {e}")
+        return jsonify({"error": "An error occurred"}), 500
+
 
 @app.route('/api/hard_net', methods=['POST'])
 def hard_net():
@@ -79,3 +86,6 @@ def band_revenue():
     ccData = request_data['ccData']
     result = get_band_revenue(data, ccData)
     return jsonify(result)
+
+if __name__ == "__main__":
+    app.run()
