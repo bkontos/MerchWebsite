@@ -1,3 +1,6 @@
+import os
+import logging
+from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
@@ -6,6 +9,19 @@ from calculations import *
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app)  # Only use this if you trust your reverse proxy
 CORS(app)
+
+# Setting up logging
+if not app.debug:
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    file_handler = RotatingFileHandler('logs/myapp.log', maxBytes=10240, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('Myapp startup')
 
 @app.route('/api/gross_per_item', methods=['POST'])
 def gross_per_item():
