@@ -1,0 +1,61 @@
+2023-05-16 14:23:40,468 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 14:32:17,403 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 15:02:59,532 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 15:08:18,492 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 15:25:00,744 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 15:39:46,796 ERROR: Exception on /api/deleteAllMerchandise [DELETE] [in /Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py:1414]
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/models.py", line 971, in json
+    return complexjson.loads(self.text, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask_cors/extension.py", line 165, in wrapped_function
+    return cors_after_request(app.make_response(f(*args, **kwargs)))
+                                                ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/briankontos/Coding/merch-website/src/backend/app.py", line 148, in delete_all_merchandise
+    return jsonify(response.json()), response.status_code
+                   ^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/models.py", line 975, in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+2023-05-16 15:41:01,280 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 15:49:39,793 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 16:37:15,624 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 16:43:58,178 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 16:44:26,329 INFO: Updating merchandise with id: 302227377 and data: {'comps': '0.00', 'countIn': '10.00', 'countOut': '5.00', 'id': '302227377', 'isHard': '', 'item': 'Jim', 'price': '20.00', 'size': 'Office'} [in /Users/briankontos/Coding/merch-website/src/backend/app.py:130]
+2023-05-16 16:44:27,027 INFO: Updating merchandise with id: 302227377 and data: {'comps': '0.00', 'countIn': '10.00', 'countOut': '5.00', 'id': '302227377', 'isHard': '', 'item': 'Jim', 'price': '20.00', 'size': 'Office'} [in /Users/briankontos/Coding/merch-website/src/backend/app.py:135]
+2023-05-16 16:44:39,642 INFO: Updating merchandise with id: 1056379199 and data: {'comps': '0.00', 'countIn': '10.00', 'countOut': '5.00', 'id': '1056379199', 'isHard': '', 'item': 'Box', 'price': '20.00', 'size': 'Office'} [in /Users/briankontos/Coding/merch-website/src/backend/app.py:130]
+2023-05-16 16:44:39,642 INFO: Updating merchandise with id: 302227377 and data: {'comps': '0.00', 'countIn': '10.00', 'countOut': '5.00', 'id': '302227377', 'isHard': '', 'item': 'Jim', 'price': '20.00', 'size': 'Office'} [in /Users/briankontos/Coding/merch-website/src/backend/app.py:130]
+2023-05-16 16:44:40,236 INFO: Updating merchandise with id: 1056379199 and data: {'comps': '0.00', 'countIn': '10.00', 'countOut': '5.00', 'id': '1056379199', 'isHard': '', 'item': 'Box', 'price': '20.00', 'size': 'Office'} [in /Users/briankontos/Coding/merch-website/src/backend/app.py:135]
+2023-05-16 16:44:40,237 INFO: Updating merchandise with id: 302227377 and data: {'comps': '0.00', 'countIn': '10.00', 'countOut': '5.00', 'id': '302227377', 'isHard': '', 'item': 'Jim', 'price': '20.00', 'size': 'Office'} [in /Users/briankontos/Coding/merch-website/src/backend/app.py:135]
+2023-05-16 16:45:18,224 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 16:53:43,255 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 17:07:52,411 INFO: Myapp startup [in /Users/briankontos/Coding/merch-website/src/backend/app.py:27]
+2023-05-16 17:08:09,192 INFO: Deleting merchandise with id: 302227377 [in /Users/briankontos/Coding/merch-website/src/backend/app.py:138]
+2023-05-16 17:08:09,996 INFO: Deleting merchandise with id: 302227377 [in /Users/briankontos/Coding/merch-website/src/backend/app.py:142]
+2023-05-16 17:08:28,680 INFO: Deleting merchandise with id: 1056379199 [in /Users/briankontos/Coding/merch-website/src/backend/app.py:138]
+2023-05-16 17:08:29,452 INFO: Deleting merchandise with id: 1056379199 [in /Users/briankontos/Coding/merch-website/src/backend/app.py:142]

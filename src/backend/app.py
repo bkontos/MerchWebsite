@@ -1,5 +1,8 @@
 import os
 import logging
+import requests
+import json
+import random
 from logging.handlers import RotatingFileHandler
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -102,6 +105,66 @@ def band_revenue():
     ccData = request_data['ccData']
     result = get_band_revenue(data, ccData)
     return jsonify(result)
+
+@app.route('/api/createMerchandise', methods=['POST'])
+def create_merchandise():
+    merchandise = request.get_json()
+    id = ''.join(str(random.randint(0, 9)) for _ in range(10))
+    merchandise['id'] = id
+    response = requests.post('https://sheetdb.io/api/v1/nc7krlodazbab',
+                             headers={'Content-Type': 'application/json',
+                                      "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2"},
+                             data=json.dumps(merchandise))
+    return jsonify(response.json()), response.status_code
+
+@app.route('/api/getAllMerchandise', methods=['GET'])
+def get_all_merchandise():
+    response = requests.get('https://sheetdb.io/api/v1/nc7krlodazbab',
+                            headers={'Content-Type': 'application/json',
+                                     "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2"})
+    return jsonify(response.json()), response.status_code
+
+@app.route('/api/updateMerchandise/<id>', methods=['PATCH'])
+def update_merchandise(id):
+    merchandise = request.get_json()
+    response = requests.patch(f'https://sheetdb.io/api/v1/nc7krlodazbab/id/{id}',
+                              headers={'Content-Type': 'application/json',
+                                       "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2"},
+                              data=json.dumps(merchandise))
+    return jsonify(response.json()), response.status_code
+
+@app.route('/api/deleteMerchandise/<id>', methods=['DELETE'])
+def delete_merchandise(id):
+    app.logger.info('Deleting merchandise with id: %s', id)
+    response = requests.delete(f'https://sheetdb.io/api/v1/nc7krlodazbab/id/{id}',
+                               headers={'Content-Type': 'application/json',
+                                        "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2"})
+    app.logger.info('Deleting merchandise with id: %s', id)
+    return jsonify(response.json()), response.status_code
+
+@app.route('/api/deleteAllMerchandise', methods=['DELETE'])
+def delete_all_merchandise():
+    response = requests.delete('https://sheetdb.io/api/v1/nc7krlodazbab/all',
+                               headers={'Content-Type': 'application/json',
+                                        "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2"})
+    return jsonify(response.json()), response.status_code
+
+@app.route('/api/getCcInfo', methods=['GET'])
+def get_cc_info():
+    response = requests.get('https://sheetdb.io/api/v1/nc7krlodazbab?sheet=CCSheet',
+                                headers={'Content-Type': 'application/json',
+                                            "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2"})
+    return jsonify(response.json()), response.status_code
+
+@app.route('/api/updateCcInfo/<ccId>', methods=['PATCH'])
+def update_cc_info(ccId):
+    ccId = 1
+    cc_info = request.get_json()
+    response = requests.patch(f'https://sheetdb.io/api/v1/nc7krlodazbab/id/{ccId}?sheet=CCSheet',
+                              headers={'Content-Type': 'application/json',
+                                       "Authorization": "Bearer grnkfggenih6anxrua75zd59jbiybyp9ngroc8m2"},
+                              data=json.dumps(cc_info))
+    return jsonify(response.json()), response.status_code
 
 if __name__ == "__main__":
     app.run()
